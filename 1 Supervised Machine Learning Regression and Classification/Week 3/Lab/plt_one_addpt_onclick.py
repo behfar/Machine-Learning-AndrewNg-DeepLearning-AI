@@ -176,11 +176,19 @@ class plt_one_addpt_onclick:
         #print(f"bb     : {bcid.rectangles[0].get_bbox()}")
         #print(f"points : {bcid.rectangles[0].get_bbox().get_points()}")  #[[xmin,ymin],[xmax,ymax]]
 
-        h = bcid.rectangles[0].get_height()
-        bcid.rectangles[0].set_height(3*h)
+        if hasattr(bcid, 'rectangles'):
+            h = bcid.rectangles[0].get_height()
+            bcid.rectangles[0].set_height(3*h)
 
-        ymax = bcid.rectangles[0].get_bbox().y1
-        ymin = bcid.rectangles[0].get_bbox().y0
+            ymax = bcid.rectangles[0].get_bbox().y1
+            ymin = bcid.rectangles[0].get_bbox().y0
 
-        bcid.lines[0][0].set_ydata([ymax,ymin])
-        bcid.lines[0][1].set_ydata([ymin,ymax])
+            bcid.lines[0][0].set_ydata([ymax,ymin])
+            bcid.lines[0][1].set_ydata([ymin,ymax])
+        else:
+            frames = getattr(bcid, '_frames', None)
+            checks = getattr(bcid, '_checks', None)
+            if frames is not None:
+                frames.set_sizes(frames.get_sizes() * 3)
+            if checks is not None:
+                checks.set_sizes(checks.get_sizes() * 3)
